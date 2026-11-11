@@ -24,7 +24,9 @@ object DatabaseModule {
             context,
             TaskDatabase::class.java,
             "taskly_database"
-        ).build()
+        )
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
     }
 
     @Provides
