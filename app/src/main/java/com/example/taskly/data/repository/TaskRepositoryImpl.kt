@@ -25,6 +25,11 @@ class TaskRepositoryImpl @Inject constructor(
         taskDao.deleteTask(task.toEntity())
     }
 
+    override suspend fun getTaskById(taskId: Int): Task? {
+        return taskDao.getTaskById(taskId)?.toDomain()
+    }
+
+
     override fun getAllTasks(): Flow<List<Task>> {
         return taskDao.getAllTasks().map { tasks ->
             tasks.map { it.toDomain() }

@@ -64,9 +64,17 @@ class HomeFragment : Fragment() {
 
     private fun setupRecyclerView() {
         taskAdapter = TaskAdapter(
-            onEditClick = {
+            onEditClick = { task ->
+                val bundle = Bundle().apply {
+                    putInt("taskId", task.id)
+                }
 
+                findNavController().navigate(
+                    R.id.action_homeFragment_to_editTaskFragment,
+                    bundle
+                )
             },
+
             onDeleteClick = { task ->
 
                 AlertDialog.Builder(requireContext())

@@ -34,6 +34,10 @@
     <action
         android:id="@+id/action_homeFragment_to_addTaskFragment"
         app:destination="@id/addTaskFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_editTaskFragment"
+            app:destination="@id/editTaskFragment" />
 </fragment>
 
 
@@ -41,6 +45,17 @@
         android:id="@+id/addTaskFragment"
         android:name="com.example.taskly.presentation.addtask.AddTaskFragment"
         android:label="Add Task" />
+
+    <fragment
+        android:id="@+id/editTaskFragment"
+        android:name="com.example.taskly.presentation.edittask.EditTaskFragment"
+        android:label="Edit Task">
+
+        <argument
+            android:name="taskId"
+            app:argType="integer" />
+
+    </fragment>
 
 
 
