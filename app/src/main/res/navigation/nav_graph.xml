@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.taskly.presentation.splash.SplashFragment"
+        android:label="Splash">
+
+        <action
+            android:id="@+id/action_splashFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.example.taskly.presentation.onboarding.OnboardingFragment"
+        android:label="Onboarding">
+
+        <action
+            android:id="@+id/action_onboardingFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.taskly.presentation.home.HomeFragment"
+        android:label="Home" >
+
+    <action
+        android:id="@+id/action_homeFragment_to_addTaskFragment"
+        app:destination="@id/addTaskFragment" />
+</fragment>
+
+
+    <fragment
+        android:id="@+id/addTaskFragment"
+        android:name="com.example.taskly.presentation.addtask.AddTaskFragment"
+        android:label="Add Task" />
+
+
+
+</navigation>
