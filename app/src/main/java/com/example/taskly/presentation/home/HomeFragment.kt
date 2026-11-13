@@ -21,7 +21,6 @@ import android.content.res.ColorStateList
 import androidx.core.graphics.toColorInt
 import androidx.navigation.fragment.findNavController
 
-
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
@@ -64,7 +63,6 @@ class HomeFragment : Fragment() {
                 R.id.action_homeFragment_to_calendarFragment
             )
         }
-
 
         observeUiState()
     }
@@ -133,6 +131,7 @@ class HomeFragment : Fragment() {
             selectFilter(TaskFilter.OVERDUE)
         }
     }
+
     private fun selectFilter(filter: TaskFilter) {
         viewModel.onEvent(
             HomeEvent.FilterSelected(filter)
@@ -145,6 +144,9 @@ class HomeFragment : Fragment() {
                 viewModel.uiState.collect { state ->
 
                     taskAdapter.submitList(state.tasks)
+
+                    binding.progressHomeLoading.isVisible =
+                        state.isLoading
 
                     binding.layoutEmptyState.isVisible =
                         !state.isLoading && state.tasks.isEmpty()
@@ -194,3 +196,4 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 }
+

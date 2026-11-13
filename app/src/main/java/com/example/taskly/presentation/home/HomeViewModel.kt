@@ -8,33 +8,36 @@ import com.example.taskly.domain.repository.TaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
+
 enum class TaskFilter {
     ALL,
     IN_PROGRESS,
     COMPLETED,
     OVERDUE
 }
+
 data class HomeUiState(
     val tasks: List<Task> = emptyList(),
     val selectedFilter: TaskFilter = TaskFilter.ALL,
     val searchQuery: String = "",
     val isLoading: Boolean = true
 )
+
 sealed class HomeEvent {
     data class SearchQueryChanged(val query: String) : HomeEvent()
     data class FilterSelected(val filter: TaskFilter) : HomeEvent()
@@ -44,17 +47,29 @@ sealed class HomeEvent {
         val isCompleted: Boolean
     ) : HomeEvent()
 }
-@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
+
     private val searchQuery = MutableStateFlow("")
     private val selectedFilter = MutableStateFlow(TaskFilter.ALL)
+
+    private val debouncedSearchQuery = searchQuery
+        .flatMapLatest { query ->
+            flow {
+                if (query.isNotBlank()) {
+                    delay(300.milliseconds)
+                }
+                emit(query)
+            }
+        }
+        .distinctUntilChanged()
+
     val uiState: StateFlow<HomeUiState> = combine(
-        searchQuery
-            .debounce(300.milliseconds)
-            .distinctUntilChanged(),
+        debouncedSearchQuery,
         selectedFilter
     ) { query, filter ->
         query to filter
