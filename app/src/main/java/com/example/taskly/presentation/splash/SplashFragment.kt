@@ -13,8 +13,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SplashFragment : Fragment() {
+
     private var _binding: SplashFragmentBinding? = null
     private val binding get() = _binding!!
+
     private val viewModel: SplashViewModel by viewModels()
 
     override fun onCreateView(
@@ -34,10 +36,15 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.startSplash {
-            findNavController().navigate(
+        viewModel.startSplash { isOnboardingCompleted ->
+
+            val destination = if (isOnboardingCompleted) {
+                R.id.action_splashFragment_to_homeFragment
+            } else {
                 R.id.action_splashFragment_to_onboardingFragment
-            )
+            }
+
+            findNavController().navigate(destination)
         }
     }
 
