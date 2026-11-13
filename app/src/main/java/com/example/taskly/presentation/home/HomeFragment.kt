@@ -59,6 +59,13 @@ class HomeFragment : Fragment() {
             )
         }
 
+        binding.btnCalendar.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_homeFragment_to_calendarFragment
+            )
+        }
+
+
         observeUiState()
     }
 
@@ -76,23 +83,22 @@ class HomeFragment : Fragment() {
             },
 
             onDeleteClick = { task ->
-
                 AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.delete_task_title))
                     .setMessage(getString(R.string.delete_task_message))
-                    .setNegativeButton(
-                        getString(R.string.cancel),
-                        null
-                    )
-                    .setPositiveButton(
-                        getString(R.string.delete)
-                    ) { _, _ ->
-
+                    .setNegativeButton(getString(R.string.cancel), null)
+                    .setPositiveButton(getString(R.string.delete)) { _, _ ->
                         viewModel.onEvent(
                             HomeEvent.DeleteTaskClicked(task)
                         )
                     }
                     .show()
+            },
+
+            onStatusChangeClick = { task, isCompleted ->
+                viewModel.onEvent(
+                    HomeEvent.TaskStatusChanged(task, isCompleted)
+                )
             }
         )
 
@@ -115,10 +121,6 @@ class HomeFragment : Fragment() {
             selectFilter(TaskFilter.ALL)
         }
 
-        binding.btnFilterPending.setOnClickListener {
-            selectFilter(TaskFilter.PENDING)
-        }
-
         binding.btnFilterInProgress.setOnClickListener {
             selectFilter(TaskFilter.IN_PROGRESS)
         }
@@ -126,8 +128,11 @@ class HomeFragment : Fragment() {
         binding.btnFilterCompleted.setOnClickListener {
             selectFilter(TaskFilter.COMPLETED)
         }
-    }
 
+        binding.btnFilterOverdue.setOnClickListener {
+            selectFilter(TaskFilter.OVERDUE)
+        }
+    }
     private fun selectFilter(filter: TaskFilter) {
         viewModel.onEvent(
             HomeEvent.FilterSelected(filter)
@@ -157,13 +162,12 @@ class HomeFragment : Fragment() {
 
         val buttons = mapOf(
             TaskFilter.ALL to binding.btnFilterAll,
-            TaskFilter.PENDING to binding.btnFilterPending,
             TaskFilter.IN_PROGRESS to binding.btnFilterInProgress,
-            TaskFilter.COMPLETED to binding.btnFilterCompleted
+            TaskFilter.COMPLETED to binding.btnFilterCompleted,
+            TaskFilter.OVERDUE to binding.btnFilterOverdue
         )
 
         buttons.forEach { (filter, button) ->
-
             val isSelected = filter == selectedFilter
 
             val backgroundColor = if (isSelected) {
@@ -184,7 +188,6 @@ class HomeFragment : Fragment() {
             button.setTextColor(textColor)
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

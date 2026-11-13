@@ -19,7 +19,7 @@
     <string name="home_search_hint">Search your tasks</string>
 
     <string name="filter_all">All</string>
-    <string name="filter_pending">Pending</string>
+    <string name="filter_overdue">Overdue</string>
     <string name="filter_in_progress">In Progress</string>
     <string name="filter_completed">Completed</string>
 
@@ -50,6 +50,17 @@
     <string name="edit_task_title">Edit Task</string>
     <string name="save_changes">Save Changes</string>
     <string name="task_not_found">Task could not be found</string>
+
+    <string name="calendar_title">Calendar</string>
+    <string name="no_tasks_for_date">No tasks scheduled for this date</string>
+    <string name="tasks_for_date">Tasks for %1$s</string>
+
+    <string name="task_due_date_label">Due Date</string>
+    <string name="task_due_date_hint">Select a date</string>
+    <string name="task_due_date_display">Due: %1$s</string>
+    <string name="task_due_date_required">Please select a due date</string>
+
+
 
 
 

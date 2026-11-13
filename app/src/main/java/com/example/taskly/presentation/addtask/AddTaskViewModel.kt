@@ -13,20 +13,28 @@ import kotlinx.coroutines.launch
 sealed class AddTaskEffect {
     object NavigateBack : AddTaskEffect()
     object ShowTitleError : AddTaskEffect()
+    object ShowDueDateError : AddTaskEffect()
 }
-
 @HiltViewModel
 class AddTaskViewModel @Inject constructor(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
-
     private val _effects = MutableSharedFlow<AddTaskEffect>()
     val effects = _effects.asSharedFlow()
+    fun addTask(title: String, description: String, dueDate: String?) {
 
-    fun addTask(title: String, description: String) {
         if (title.isBlank()) {
             viewModelScope.launch {
                 _effects.emit(AddTaskEffect.ShowTitleError)
+            }
+            return
+        }
+
+        val validDueDate = dueDate?.trim()
+
+        if (validDueDate.isNullOrBlank()) {
+            viewModelScope.launch {
+                _effects.emit(AddTaskEffect.ShowDueDateError)
             }
             return
         }
@@ -35,7 +43,8 @@ class AddTaskViewModel @Inject constructor(
             taskRepository.insertTask(
                 Task(
                     title = title.trim(),
-                    description = description.trim()
+                    description = description.trim(),
+                    dueDate = validDueDate
                 )
             )
 

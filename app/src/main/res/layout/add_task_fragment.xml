@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F7F7F2"
@@ -56,6 +57,7 @@
         app:boxCornerRadiusTopEnd="12dp"
         app:boxCornerRadiusTopStart="12dp"
         app:boxStrokeColor="#245B45"
+        app:layout_constraintWidth_max="488dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTaskTitleLabel">
@@ -69,7 +71,8 @@
             android:maxLines="1"
             android:padding="16dp"
             android:textColor="#26352D"
-            android:textColorHint="#687565" />
+            android:textColorHint="#757575"
+            tools:ignore="TextContrastCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -97,6 +100,7 @@
         app:boxCornerRadiusTopEnd="12dp"
         app:boxCornerRadiusTopStart="12dp"
         app:boxStrokeColor="#245B45"
+        app:layout_constraintWidth_max="488dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvDescriptionLabel">
@@ -110,14 +114,61 @@
             android:inputType="textCapSentences|textMultiLine"
             android:padding="16dp"
             android:textColor="#26352D"
-            android:textColorHint="#687565" />
+            android:textColorHint="#59665B"
+            tools:ignore="TextContrastCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+        android:id="@+id/tvDueDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/task_due_date_label"
+        android:textColor="#26352D"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tilTaskDescription" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilTaskDueDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:boxBackgroundColor="#FFFFFF"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxStrokeColor="#245B45"
+        app:layout_constraintWidth_max="488dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDueDateLabel">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etTaskDueDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:hint="@string/task_due_date_hint"
+            android:padding="16dp"
+            android:textColor="#26352D"
+            android:textColorHint="#59665B"
+            tools:ignore="TextContrastCheck" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSaveTask"
         android:layout_width="0dp"
         android:layout_height="56dp"
+        app:layout_constraintWidth_max="320dp"
         android:layout_marginBottom="16dp"
         android:text="@string/add_task_button"
         android:textAllCaps="false"

@@ -8,7 +8,6 @@ import com.example.taskly.domain.repository.TaskRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-
 class TaskRepositoryImpl @Inject constructor(
     private val taskDao: TaskDao
 ) : TaskRepository {
@@ -41,4 +40,11 @@ class TaskRepositoryImpl @Inject constructor(
             tasks.map { it.toDomain() }
         }
     }
+
+    override fun getTasksByDate(date: String): Flow<List<Task>> {
+        return taskDao.getTasksByDate(date).map { tasks ->
+            tasks.map { it.toDomain() }
+        }
+    }
+
 }

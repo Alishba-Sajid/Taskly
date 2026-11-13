@@ -10,25 +10,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 data class OnboardingUiState(
     val currentPage: Int = 0,
     val title: String = "Welcome to Taskly",
     val description: String = "A simple space to plan your day and stay on track.",
     val buttonText: String = "Continue"
 )
-
 sealed class OnboardingEvent {
     object ContinueClicked : OnboardingEvent()
-}
-
-sealed class OnboardingEffect {
+}sealed class OnboardingEffect {
     object NavigateToHome : OnboardingEffect()
-}
-
-@HiltViewModel
+}@HiltViewModel
 class OnboardingViewModel @Inject constructor() : ViewModel() {
-
     private val pages = listOf(
         OnboardingUiState(
             currentPage = 0,
@@ -49,13 +42,10 @@ class OnboardingViewModel @Inject constructor() : ViewModel() {
             buttonText = "Get Started"
         )
     )
-
     private val _uiState = MutableStateFlow(pages[0])
     val uiState: StateFlow<OnboardingUiState> = _uiState
-
     private val _effects = MutableSharedFlow<OnboardingEffect>()
     val effects = _effects.asSharedFlow()
-
     fun onEvent(event: OnboardingEvent) {
         when (event) {
             OnboardingEvent.ContinueClicked -> {

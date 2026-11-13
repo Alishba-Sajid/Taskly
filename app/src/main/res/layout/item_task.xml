@@ -2,9 +2,12 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
+    android:layout_marginTop="5dp"
+    android:fitsSystemWindows="true"
     app:cardBackgroundColor="#FFFFFF"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
@@ -16,6 +19,16 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/cbTaskCompleted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            app:buttonTint="#245B45"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="VisualLintSystemUi" />
+
         <TextView
             android:id="@+id/tvTaskTitle"
             android:layout_width="0dp"
@@ -24,9 +37,10 @@
             android:textColor="#26352D"
             android:textSize="17sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cbTaskCompleted"
             app:layout_constraintEnd_toStartOf="@id/btnEditTask"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="VisualLintSystemUi" />
 
         <TextView
             android:id="@+id/tvTaskDescription"
@@ -36,9 +50,20 @@
             android:text="@string/home_task_description_placeholder"
             android:textColor="#687565"
             android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvTaskTitle"
             app:layout_constraintEnd_toStartOf="@id/btnEditTask"
             app:layout_constraintTop_toBottomOf="@id/tvTaskTitle" />
+
+        <TextView
+            android:id="@+id/tvTaskDueDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="#687565"
+            android:textSize="13sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/tvTaskTitle"
+            app:layout_constraintTop_toBottomOf="@id/tvTaskDescription" />
 
         <TextView
             android:id="@+id/tvTaskStatus"
@@ -48,43 +73,46 @@
             android:background="#DCE9DF"
             android:paddingHorizontal="10dp"
             android:paddingVertical="5dp"
-            android:text="@string/filter_pending"
+            android:text="@string/filter_in_progress"
             android:textColor="#245B45"
             android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTaskDescription" />
+            app:layout_constraintStart_toStartOf="@id/tvTaskTitle"
+            app:layout_constraintTop_toBottomOf="@id/tvTaskDueDate" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEditTask"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="48dp"
+            android:layout_height="46dp"
+            android:layout_marginEnd="4dp"
+            android:backgroundTint="#DCE9DF"
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:padding="0dp"
             android:text="@string/task_edit_icon"
             android:textColor="#245B45"
             android:textSize="20sp"
-            android:backgroundTint="#DCE9DF"
             app:cornerRadius="12dp"
             app:layout_constraintEnd_toStartOf="@id/btnDeleteTask"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="VisualLintSystemUi,TouchTargetSizeCheck" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDeleteTask"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="6dp"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:backgroundTint="#F8E7E4"
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:padding="0dp"
             android:text="@string/task_delete_icon"
             android:textColor="#A33D35"
-            android:textSize="20sp"
-            android:backgroundTint="#F8E7E4"
+            android:textSize="21sp"
             app:cornerRadius="12dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="VisualLintSystemUi,TouchTargetSizeCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
+

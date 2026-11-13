@@ -13,10 +13,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SplashFragment : Fragment() {
-
     private var _binding: SplashFragmentBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel: SplashViewModel by viewModels()
 
     override fun onCreateView(

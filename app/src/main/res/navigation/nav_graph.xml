@@ -38,13 +38,30 @@
         <action
             android:id="@+id/action_homeFragment_to_editTaskFragment"
             app:destination="@id/editTaskFragment" />
-</fragment>
+
+        <action
+            android:id="@+id/action_homeFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment" />
+
+    </fragment>
 
 
     <fragment
         android:id="@+id/addTaskFragment"
         android:name="com.example.taskly.presentation.addtask.AddTaskFragment"
         android:label="Add Task" />
+
+
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.example.taskly.presentation.calendar.CalendarFragment"
+        android:label="Calendar">
+
+        <action
+            android:id="@+id/action_calendarFragment_to_editTaskFragment"
+            app:destination="@id/editTaskFragment" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/editTaskFragment"

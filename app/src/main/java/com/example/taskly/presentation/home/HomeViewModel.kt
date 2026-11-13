@@ -19,41 +19,42 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlin.time.Duration.Companion.milliseconds
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlinx.coroutines.launch
-
-
 enum class TaskFilter {
     ALL,
-    PENDING,
     IN_PROGRESS,
-    COMPLETED
+    COMPLETED,
+    OVERDUE
 }
-
 data class HomeUiState(
     val tasks: List<Task> = emptyList(),
     val selectedFilter: TaskFilter = TaskFilter.ALL,
     val searchQuery: String = "",
     val isLoading: Boolean = true
 )
-
 sealed class HomeEvent {
     data class SearchQueryChanged(val query: String) : HomeEvent()
     data class FilterSelected(val filter: TaskFilter) : HomeEvent()
-
     data class DeleteTaskClicked(val task: Task) : HomeEvent()
+    data class TaskStatusChanged(
+        val task: Task,
+        val isCompleted: Boolean
+    ) : HomeEvent()
 }
-
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
-
     private val searchQuery = MutableStateFlow("")
     private val selectedFilter = MutableStateFlow(TaskFilter.ALL)
-
     val uiState: StateFlow<HomeUiState> = combine(
-        searchQuery.debounce(300.milliseconds).distinctUntilChanged(),
+        searchQuery
+            .debounce(300.milliseconds)
+            .distinctUntilChanged(),
         selectedFilter
     ) { query, filter ->
         query to filter
@@ -66,16 +67,31 @@ class HomeViewModel @Inject constructor(
         }
 
         taskFlow.map { tasks ->
+
+            val today = SimpleDateFormat(
+                "yyyy-MM-dd",
+                Locale.US
+            ).format(Date())
+
             val filteredTasks = when (filter) {
                 TaskFilter.ALL -> tasks
-                TaskFilter.PENDING ->
-                    tasks.filter { it.status == TaskStatus.PENDING }
 
                 TaskFilter.IN_PROGRESS ->
-                    tasks.filter { it.status == TaskStatus.IN_PROGRESS }
+                    tasks.filter {
+                        it.status == TaskStatus.IN_PROGRESS &&
+                                it.dueDate >= today
+                    }
 
                 TaskFilter.COMPLETED ->
-                    tasks.filter { it.status == TaskStatus.COMPLETED }
+                    tasks.filter {
+                        it.status == TaskStatus.COMPLETED
+                    }
+
+                TaskFilter.OVERDUE ->
+                    tasks.filter {
+                        it.status == TaskStatus.IN_PROGRESS &&
+                                it.dueDate < today
+                    }
             }
 
             HomeUiState(
@@ -107,6 +123,20 @@ class HomeViewModel @Inject constructor(
                 }
             }
 
+            is HomeEvent.TaskStatusChanged -> {
+                viewModelScope.launch {
+                    val updatedStatus = if (event.isCompleted) {
+                        TaskStatus.COMPLETED
+                    } else {
+                        TaskStatus.IN_PROGRESS
+                    }
+
+                    taskRepository.updateTask(
+                        event.task.copy(status = updatedStatus)
+                    )
+                }
+            }
         }
     }
 }
+

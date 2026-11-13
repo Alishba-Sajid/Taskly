@@ -14,13 +14,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import androidx.navigation.fragment.findNavController
 import com.example.taskly.R
-
 @AndroidEntryPoint
 class OnboardingFragment : Fragment() {
-
     private var _binding: OnboardingFragmentBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel: OnboardingViewModel by viewModels()
 
     override fun onCreateView(
@@ -47,7 +44,6 @@ class OnboardingFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                // Collect UI state
                 launch {
                     viewModel.uiState.collect { state ->
 
@@ -69,7 +65,6 @@ class OnboardingFragment : Fragment() {
                     }
                 }
 
-                // Collect one-time UI effects
                 launch {
                     viewModel.effects.collect { effect ->
 

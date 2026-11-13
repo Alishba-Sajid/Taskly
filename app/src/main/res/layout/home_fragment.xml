@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F7F7F2"
-    android:padding="24dp">
+    android:padding="25dp">
 
     <TextView
         android:id="@+id/tvHomeAppName"
@@ -20,14 +21,14 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCalendar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:minWidth="0dp"
         android:minHeight="0dp"
         android:padding="0dp"
         android:text="@string/home_calendar_icon"
         android:textColor="#245B45"
-        android:textSize="24sp"
+        android:textSize="25sp"
         android:backgroundTint="#DCE9DF"
         app:cornerRadius="14dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +38,7 @@
         android:id="@+id/tvMyTasks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="30dp"
         android:text="@string/home_title"
         android:textColor="#26352D"
         android:textSize="26sp"
@@ -50,7 +51,7 @@
         android:id="@+id/cardSearch"
         android:layout_width="0dp"
         android:layout_height="54dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="18dp"
         app:cardBackgroundColor="#FFFFFF"
         app:cardCornerRadius="14dp"
         app:cardElevation="0dp"
@@ -58,6 +59,7 @@
         app:strokeWidth="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_max="488dp"
         app:layout_constraintTop_toBottomOf="@id/tvMyTasks">
 
         <EditText
@@ -65,23 +67,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
-            android:hint="@string/home_search_hint"
             android:drawableStart="@android:drawable/ic_menu_search"
             android:drawablePadding="12dp"
-            android:importantForAutofill="no" android:paddingHorizontal="16dp"
+            android:hint="@string/home_search_hint"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:paddingHorizontal="16dp"
             android:singleLine="true"
             android:textColor="#26352D"
-            android:textColorHint="#929B91"
-            android:textSize="14sp"
-            android:inputType="text" />
+            android:textColorHint="#757575"
+            android:textSize="14sp" />
 
     </com.google.android.material.card.MaterialCardView>
 
     <HorizontalScrollView
         android:id="@+id/scrollTaskFilters"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:scrollbars="none"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cardSearch">
@@ -89,12 +93,13 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="VisualLintBounds">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnFilterAll"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="43dp"
                 android:text="@string/filter_all"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
@@ -102,41 +107,43 @@
                 app:cornerRadius="12dp"
                 app:strokeWidth="0dp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnFilterPending"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
-                android:text="@string/filter_pending"
-                android:textAllCaps="false"
-                android:textColor="#687565"
-                android:backgroundTint="#E9EDE7"
-                app:cornerRadius="12dp"
-                app:strokeWidth="0dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnFilterInProgress"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="43dp"
                 android:layout_marginStart="8dp"
+                android:backgroundTint="#E9EDE7"
                 android:text="@string/filter_in_progress"
                 android:textAllCaps="false"
-                android:textColor="#687565"
-                android:backgroundTint="#E9EDE7"
+                android:textColor="#616161"
                 app:cornerRadius="12dp"
                 app:strokeWidth="0dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnFilterCompleted"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="43dp"
                 android:layout_marginStart="8dp"
+                android:backgroundTint="#E9EDE7"
                 android:text="@string/filter_completed"
                 android:textAllCaps="false"
-                android:textColor="#687565"
-                android:backgroundTint="#E9EDE7"
+                android:textColor="#616161"
                 app:cornerRadius="12dp"
                 app:strokeWidth="0dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFilterOverdue"
+                android:layout_width="wrap_content"
+                android:layout_height="43dp"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="#E9EDE7"
+                android:text="@string/filter_overdue"
+                android:textAllCaps="false"
+                android:textColor="#546E7A"
+                app:cornerRadius="12dp"
+                app:strokeWidth="0dp"
+                tools:ignore="TextContrastCheck" />
 
         </LinearLayout>
     </HorizontalScrollView>
@@ -160,7 +167,8 @@
             android:text="@string/home_empty_icon"
             android:textColor="#245B45"
             android:textSize="55sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="TextSizeCheck" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -198,6 +206,7 @@
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginBottom="8dp"
+        app:layout_constraintWidth_max="320dp"
         android:text="@string/home_add_task"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
