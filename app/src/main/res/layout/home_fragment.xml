@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F7F2"
+    android:background="@color/app_background"
     android:padding="25dp">
 
     <TextView
@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/home_app_name"
-        android:textColor="#245B45"
+        android:textColor="@color/app_tint"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +27,7 @@
         android:minHeight="0dp"
         android:padding="0dp"
         android:text="@string/home_calendar_icon"
-        android:textColor="#245B45"
+        android:textColor="@color/app_tint"
         android:textSize="25sp"
         android:backgroundTint="#DCE9DF"
         app:cornerRadius="14dp"
@@ -40,22 +40,21 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="@string/home_title"
-        android:textColor="#26352D"
+        android:textColor="@color/text_color"
         android:textSize="26sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvHomeAppName" />
 
-    <!-- Search Bar -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardSearch"
         android:layout_width="0dp"
         android:layout_height="54dp"
         android:layout_marginTop="18dp"
-        app:cardBackgroundColor="#FFFFFF"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="14dp"
         app:cardElevation="0dp"
-        app:strokeColor="#E5E9E2"
+        app:strokeColor="@color/color_stroke"
         app:strokeWidth="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +73,7 @@
             android:inputType="text"
             android:paddingHorizontal="16dp"
             android:singleLine="true"
-            android:textColor="#26352D"
+            android:textColor="@color/text_color"
             android:textColorHint="#757575"
             android:textSize="14sp" />
 
@@ -102,7 +101,7 @@
                 android:layout_height="43dp"
                 android:text="@string/filter_all"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:backgroundTint="#245B45"
                 app:cornerRadius="12dp"
                 app:strokeWidth="0dp" />
@@ -113,10 +112,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="43dp"
                 android:layout_marginStart="8dp"
-                android:backgroundTint="#E9EDE7"
+                android:backgroundTint="@color/bg_tint"
                 android:text="@string/filter_in_progress"
                 android:textAllCaps="false"
-                android:textColor="#616161"
+                android:textColor="@color/text_col"
                 app:cornerRadius="12dp"
                 app:strokeWidth="0dp" />
 
@@ -125,10 +124,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="43dp"
                 android:layout_marginStart="8dp"
-                android:backgroundTint="#E9EDE7"
+                android:backgroundTint="@color/bg_tint"
                 android:text="@string/filter_completed"
                 android:textAllCaps="false"
-                android:textColor="#616161"
+                android:textColor="@color/text_col"
                 app:cornerRadius="12dp"
                 app:strokeWidth="0dp" />
 
@@ -137,10 +136,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="43dp"
                 android:layout_marginStart="8dp"
-                android:backgroundTint="#E9EDE7"
+                android:backgroundTint="@color/bg_tint"
                 android:text="@string/filter_overdue"
                 android:textAllCaps="false"
-                android:textColor="#546E7A"
+                android:textColor="@color/text_col_2"
                 app:cornerRadius="12dp"
                 app:strokeWidth="0dp"
                 tools:ignore="TextContrastCheck" />
@@ -162,10 +161,10 @@
         <TextView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="#DCE9DF"
+            android:background="@color/bg"
             android:gravity="center"
             android:text="@string/home_empty_icon"
-            android:textColor="#245B45"
+            android:textColor="@color/app_tint"
             android:textSize="55sp"
             android:textStyle="bold"
             tools:ignore="TextSizeCheck" />
@@ -175,7 +174,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/home_empty_title"
-            android:textColor="#26352D"
+            android:textColor="@color/text_color"
             android:textSize="21sp"
             android:textStyle="bold" />
 
@@ -185,7 +184,7 @@
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:text="@string/home_empty_description"
-            android:textColor="#687565"
+            android:textColor="@color/Text"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -196,7 +195,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"
-        android:indeterminateTint="#245B45"
+        android:indeterminateTint="@color/app_tint"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/scrollTaskFilters"
         app:layout_constraintBottom_toTopOf="@id/btnAddTask"
@@ -214,7 +213,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Add Task Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAddTask"
         android:layout_width="0dp"
@@ -223,10 +221,10 @@
         app:layout_constraintWidth_max="320dp"
         android:text="@string/home_add_task"
         android:textAllCaps="false"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:backgroundTint="#245B45"
+        android:backgroundTint="@color/app_tint"
         app:cornerRadius="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

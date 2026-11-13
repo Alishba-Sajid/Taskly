@@ -2,4 +2,31 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <color name="app_background">#F7F7F2</color>
+    <color name="app_tint">#245B45</color>
+    <color name="text_color">#26352D</color>
+    <color name="card_bg">#E5EEE6</color>
+    <color name="describe">#59665B</color>
+    <color name="box_bg">#FAFBF9</color>
+    <color name="text_hint">#858D85</color>
+    <color name="stroke">#E5EAE3</color>
+    <color name="Text">#687565</color>
+    <color name="color_stroke">#E5E9E2</color>
+    <color name="bg_tint">#E9EDE7</color>
+    <color name="text_col">#616161</color>
+    <color name="text_col_2">#546E7A</color>
+    <color name="bg">#DCE9DF</color>
+    <color name="bg_tint_2">#F8E7E4</color>
+    <color name="text_2">#A33D35</color>
+
+
+
+
+
+
+
+
+
 </resources>

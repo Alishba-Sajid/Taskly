@@ -40,14 +40,14 @@
     <string name="delete">Delete</string>
 
     <string name="back">Back</string>
-    <string name="add_task_title">Add New Task</string>
+    <string name="add_task_title">Add New Task +</string>
     <string name="task_title_label">Task Title</string>
     <string name="task_title_hint">Enter task title</string>
     <string name="task_description_label">Description</string>
     <string name="task_description_hint">Enter task description</string>
     <string name="add_task_button">Add Task</string>
     <string name="task_title_required">Please enter a task title</string>
-    <string name="edit_task_title">Edit Task</string>
+    <string name="edit_task_title">Edit Task ✎</string>
     <string name="save_changes">Save Changes</string>
     <string name="task_not_found">Task could not be found</string>
 
@@ -59,11 +59,9 @@
     <string name="task_due_date_hint">Select a date</string>
     <string name="task_due_date_display">Due: %1$s</string>
     <string name="task_due_date_required">Please select a due date</string>
-
-
-
-
-
+    <string name="add_logo">+</string>
+    <string name="quote">Make it happen</string>
+    <string name="describe">Add the details and set a due date for your task.</string>
 
 
 </resources>

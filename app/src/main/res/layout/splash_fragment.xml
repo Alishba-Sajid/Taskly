@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F7F2"
+    android:background="@color/app_background"
     android:padding="24dp">
 
     <TextView
@@ -16,7 +16,7 @@
         android:background="@drawable/bg_splash_logo"
         android:gravity="center"
         android:text="@string/splash_logo_check"
-        android:textColor="#245B45"
+        android:textColor="@color/app_tint"
         android:textSize="52sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/tvAppName"
@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/splash_app_name"
-        android:textColor="#245B45"
+        android:textColor="@color/app_tint"
         android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -44,7 +44,7 @@
         android:layout_marginTop="12dp"
         android:gravity="center"
         android:text="@string/splash_tagline"
-        android:textColor="#687565"
+        android:textColor="@color/Text"
         android:textSize="15sp"
         app:layout_constraintTop_toBottomOf="@id/tvAppName"
         app:layout_constraintStart_toStartOf="parent"
