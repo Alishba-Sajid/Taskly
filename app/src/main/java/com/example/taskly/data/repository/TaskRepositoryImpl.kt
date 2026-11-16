@@ -1,8 +1,8 @@
 package com.example.taskly.data.repository
 
 import com.example.taskly.data.local.TaskDao
-import com.example.taskly.data.mapper.toDomain
-import com.example.taskly.data.mapper.toEntity
+import com.example.taskly.data.local.toDomain
+import com.example.taskly.data.local.toEntity
 import com.example.taskly.domain.model.Task
 import com.example.taskly.domain.repository.TaskRepository
 import kotlinx.coroutines.flow.Flow
