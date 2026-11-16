@@ -53,7 +53,6 @@ class OnboardingViewModel @Inject constructor(
     private val _buttonTextResId =
         MutableStateFlow(R.string.onboarding_button_continue)
     val buttonTextResId: StateFlow<Int> = _buttonTextResId.asStateFlow()
-
     val totalPages: Int = pages.size
     private val _navigationEvents = MutableSharedFlow<Unit>()
     val navigationEvents = _navigationEvents.asSharedFlow()

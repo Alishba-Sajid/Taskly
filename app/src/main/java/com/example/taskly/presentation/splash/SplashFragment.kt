@@ -1,11 +1,12 @@
 package com.example.taskly.presentation.splash
 
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.taskly.R
+import com.example.taskly.core.extentionfunc.collectLifecycleFlow
 import com.example.taskly.databinding.SplashFragmentBinding
 import com.example.taskly.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.fragment.app.viewModels
 @AndroidEntryPoint
 class SplashFragment : BaseFragment<SplashFragmentBinding>(
     SplashFragmentBinding::inflate
@@ -13,7 +14,7 @@ class SplashFragment : BaseFragment<SplashFragmentBinding>(
     private val viewModel: SplashViewModel by viewModels()
 
     override fun observeData() {
-        viewModel.startSplash { isOnboardingCompleted ->
+        collectLifecycleFlow(viewModel.navigationEvents) { isOnboardingCompleted ->
 
             val destination = if (isOnboardingCompleted) {
                 R.id.action_splashFragment_to_homeFragment
@@ -23,5 +24,7 @@ class SplashFragment : BaseFragment<SplashFragmentBinding>(
 
             findNavController().navigate(destination)
         }
+
+        viewModel.startSplash()
     }
 }

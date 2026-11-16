@@ -1,20 +1,19 @@
 package com.example.taskly.presentation.home
 
-import androidx.core.graphics.toColorInt
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskly.R
+import com.example.taskly.core.extentionfunc.isOverdue
+import com.example.taskly.core.extentionfunc.show
+import com.example.taskly.core.extentionfunc.toDueDateText
 import com.example.taskly.databinding.ItemTaskBinding
 import com.example.taskly.domain.model.Task
 import com.example.taskly.domain.model.TaskStatus
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import androidx.core.graphics.toColorInt
 
 class TaskAdapter(
     private val onEditClick: (Task) -> Unit,
@@ -41,7 +40,6 @@ class TaskAdapter(
     ) {
         holder.bind(getItem(position))
     }
-
     inner class TaskViewHolder(
         private val binding: ItemTaskBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -50,14 +48,8 @@ class TaskAdapter(
             binding.tvTaskTitle.text = task.title
             binding.tvTaskDescription.text = task.description
 
-            val today = SimpleDateFormat(
-                "yyyy-MM-dd",
-                Locale.US
-            ).format(Date())
-
-            val isOverdue =
-                task.status == TaskStatus.IN_PROGRESS &&
-                        task.dueDate < today
+            val context = binding.root.context
+            val isOverdue = task.isOverdue()
 
             val statusText: String
             val backgroundColor: Int
@@ -65,7 +57,7 @@ class TaskAdapter(
 
             when {
                 task.status == TaskStatus.COMPLETED -> {
-                    statusText = binding.root.context.getString(
+                    statusText = context.getString(
                         R.string.filter_completed
                     )
                     backgroundColor = "#DCE9DF".toColorInt()
@@ -73,7 +65,7 @@ class TaskAdapter(
                 }
 
                 isOverdue -> {
-                    statusText = binding.root.context.getString(
+                    statusText = context.getString(
                         R.string.filter_overdue
                     )
                     backgroundColor = "#FCE8E6".toColorInt()
@@ -81,14 +73,13 @@ class TaskAdapter(
                 }
 
                 else -> {
-                    statusText = binding.root.context.getString(
+                    statusText = context.getString(
                         R.string.filter_in_progress
                     )
                     backgroundColor = "#E3EDF9".toColorInt()
                     textColor = "#285B8F".toColorInt()
                 }
             }
-
 
             binding.tvTaskStatus.text = statusText
             binding.tvTaskStatus.setTextColor(textColor)
@@ -101,24 +92,8 @@ class TaskAdapter(
                 this.cornerRadius = cornerRadius
             }
 
-            val parsedDate = SimpleDateFormat(
-                "yyyy-MM-dd",
-                Locale.US
-            ).parse(task.dueDate)
-
-            val displayDate = parsedDate?.let {
-                SimpleDateFormat(
-                    "dd MMM yyyy",
-                    Locale.getDefault()
-                ).format(it)
-            } ?: task.dueDate
-
-            binding.tvTaskDueDate.text = binding.root.context.getString(
-                R.string.task_due_date_display,
-                displayDate
-            )
-
-            binding.tvTaskDueDate.visibility = View.VISIBLE
+            binding.tvTaskDueDate.text = task.toDueDateText(context)
+            binding.tvTaskDueDate.show()
 
             binding.cbTaskCompleted.setOnCheckedChangeListener(null)
 
@@ -138,7 +113,6 @@ class TaskAdapter(
             }
         }
     }
-
     class TaskDiffCallback : DiffUtil.ItemCallback<Task>() {
 
         override fun areItemsTheSame(

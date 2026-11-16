@@ -2,50 +2,33 @@ package com.example.taskly.presentation.home
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.toColorInt
-import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskly.R
+import com.example.taskly.core.extentionfunc.collectLifecycleFlow
+import com.example.taskly.core.extentionfunc.hide
+import com.example.taskly.core.extentionfunc.show
 import com.example.taskly.databinding.HomeFragmentBinding
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import com.example.taskly.domain.model.Task
+import com.example.taskly.presentation.base.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
+
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
-    private var _binding: HomeFragmentBinding? = null
-    private val binding get() = _binding!!
+class HomeFragment : BaseFragment<HomeFragmentBinding>(
+    HomeFragmentBinding::inflate
+) {
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var taskAdapter: TaskAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = HomeFragmentBinding.inflate(
-            inflater,
-            container,
-            false
-        )
-
-        return binding.root
+    override fun setupViews() {
+        setupRecyclerView()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setupRecyclerView()
+    override fun setupListeners() {
         setupSearch()
         setupFilters()
 
@@ -60,9 +43,36 @@ class HomeFragment : Fragment() {
                 R.id.action_homeFragment_to_calendarFragment
             )
         }
-
-        observeViewModel()
     }
+
+    override fun observeData() {
+        collectLifecycleFlow(viewModel.tasks) { tasks ->
+            taskAdapter.submitList(tasks)
+
+            renderTasks(
+                tasks = tasks,
+                isLoading = viewModel.isLoading.value
+            )
+        }
+
+        collectLifecycleFlow(viewModel.isLoading) { isLoading ->
+            renderTasks(
+                tasks = viewModel.tasks.value,
+                isLoading = isLoading
+            )
+        }
+
+        collectLifecycleFlow(viewModel.selectedFilter) { filter ->
+            updateFilterButtons(filter)
+        }
+
+        collectLifecycleFlow(viewModel.searchQuery) { query ->
+            if (binding.etSearchTasks.text.toString() != query) {
+                binding.etSearchTasks.setText(query)
+            }
+        }
+    }
+
     private fun setupRecyclerView() {
         taskAdapter = TaskAdapter(
             onEditClick = { task ->
@@ -124,60 +134,29 @@ class HomeFragment : Fragment() {
     private fun selectFilter(filter: TaskFilter) {
         viewModel.onFilterSelected(filter)
     }
-    private fun observeViewModel() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                launch {
-                    viewModel.tasks.collect { tasks ->
-                        taskAdapter.submitList(tasks)
-
-                        renderTasks(
-                            tasks = tasks,
-                            isLoading = viewModel.isLoading.value
-                        )
-                    }
-                }
-
-                launch {
-                    viewModel.isLoading.collect { isLoading ->
-                        renderTasks(
-                            tasks = viewModel.tasks.value,
-                            isLoading = isLoading
-                        )
-                    }
-                }
-
-                launch {
-                    viewModel.selectedFilter.collect { filter ->
-                        updateFilterButtons(filter)
-                    }
-                }
-
-                launch {
-                    viewModel.searchQuery.collect { query ->
-                        if (binding.etSearchTasks.text.toString() != query) {
-                            binding.etSearchTasks.setText(query)
-                        }
-                    }
-                }
-            }
-        }
-    }
     private fun renderTasks(
         tasks: List<Task>,
         isLoading: Boolean
     ) {
-        binding.progressHomeLoading.isVisible = isLoading
+        if (isLoading) {
+            binding.progressHomeLoading.show()
+        } else {
+            binding.progressHomeLoading.hide()
+        }
 
-        binding.layoutEmptyState.isVisible =
-            !isLoading && tasks.isEmpty()
+        if (!isLoading && tasks.isEmpty()) {
+            binding.layoutEmptyState.show()
+        } else {
+            binding.layoutEmptyState.hide()
+        }
 
-        binding.rvTasks.isVisible =
-            !isLoading && tasks.isNotEmpty()
+        if (!isLoading && tasks.isNotEmpty()) {
+            binding.rvTasks.show()
+        } else {
+            binding.rvTasks.hide()
+        }
     }
     private fun updateFilterButtons(selectedFilter: TaskFilter) {
-
         val buttons = mapOf(
             TaskFilter.ALL to binding.btnFilterAll,
             TaskFilter.IN_PROGRESS to binding.btnFilterInProgress,
@@ -205,10 +184,5 @@ class HomeFragment : Fragment() {
 
             button.setTextColor(textColor)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
