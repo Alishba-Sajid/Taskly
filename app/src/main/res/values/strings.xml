@@ -64,4 +64,21 @@
     <string name="describe">Add the details and set a due date for your task.</string>
 
 
+    <string name="onboarding_page_1_title">Welcome to Taskly</string>
+    <string name="onboarding_page_1_description">A simple space to plan your day and stay on track.</string>
+    <string name="onboarding_page_1_illustration">✓</string>
+
+    <string name="onboarding_page_2_title">Everything in One Place</string>
+    <string name="onboarding_page_2_description">Add and edit tasks, assign dates, and track your progress easily.</string>
+    <string name="onboarding_page_2_illustration">✎</string>
+
+    <string name="onboarding_page_3_title">Make Every Day Count</string>
+    <string name="onboarding_page_3_description">Organize your tasks and stay focused on what matters.</string>
+    <string name="onboarding_page_3_illustration">▦</string>
+
+    <string name="onboarding_button_continue">Continue</string>
+    <string name="onboarding_button_get_started">Get Started</string>
+
+
+
 </resources>

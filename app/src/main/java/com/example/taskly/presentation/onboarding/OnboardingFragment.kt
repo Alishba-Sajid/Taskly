@@ -1,89 +1,83 @@
 package com.example.taskly.presentation.onboarding
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.taskly.databinding.OnboardingFragmentBinding
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import androidx.navigation.fragment.findNavController
 import com.example.taskly.R
+import com.example.taskly.databinding.OnboardingFragmentBinding
+import com.example.taskly.presentation.base.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+
 @AndroidEntryPoint
-class OnboardingFragment : Fragment() {
-    private var _binding: OnboardingFragmentBinding? = null
-    private val binding get() = _binding!!
+class OnboardingFragment : BaseFragment<OnboardingFragmentBinding>(
+    OnboardingFragmentBinding::inflate
+) {
     private val viewModel: OnboardingViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = OnboardingFragmentBinding.inflate(
-            inflater,
-            container,
-            false
-        )
-
-        return binding.root
+    override fun setupListeners() {
+        binding.btnContinue.setOnClickListener {
+            viewModel.onContinueClicked()
+        }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.btnContinue.setOnClickListener {
-            viewModel.onEvent(OnboardingEvent.ContinueClicked)
-        }
-
+    override fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 launch {
-                    viewModel.uiState.collect { state ->
-
-                        binding.tvOnboardingTitle.text = state.title
-                        binding.tvOnboardingDescription.text = state.description
-                        binding.btnContinue.text = state.buttonText
-
-                        binding.tvPageIndicator.text = when (state.currentPage) {
-                            0 -> "● ○ ○"
-                            1 -> "○ ● ○"
-                            else -> "○ ○ ●"
-                        }
-
-                        binding.tvIllustration.text = when (state.currentPage) {
-                            0 -> "✓"
-                            1 -> "✎"
-                            else -> "▦"
-                        }
+                    viewModel.titleResId.collect { titleResId ->
+                        binding.tvOnboardingTitle.text = getString(titleResId)
                     }
                 }
 
                 launch {
-                    viewModel.effects.collect { effect ->
+                    viewModel.descriptionResId.collect { descriptionResId ->
+                        binding.tvOnboardingDescription.text =
+                            getString(descriptionResId)
+                    }
+                }
 
-                        when (effect) {
-                            OnboardingEffect.NavigateToHome -> {
-                                findNavController().navigate(
-                                    R.id.action_onboardingFragment_to_homeFragment
-                                )
-                            }
-                        }
+                launch {
+                    viewModel.illustrationResId.collect { illustrationResId ->
+                        binding.tvIllustration.text = getString(illustrationResId)
+                    }
+                }
+
+                launch {
+                    viewModel.buttonTextResId.collect { buttonTextResId ->
+                        binding.btnContinue.text = getString(buttonTextResId)
+                    }
+                }
+
+                launch {
+                    viewModel.currentPageIndex.collect { currentPageIndex ->
+                        renderPageIndicator(currentPageIndex)
+                    }
+                }
+
+                launch {
+                    viewModel.navigationEvents.collect {
+                        findNavController().navigate(
+                            R.id.action_onboardingFragment_to_homeFragment
+                        )
                     }
                 }
             }
         }
     }
+    private fun renderPageIndicator(currentPageIndex: Int) {
+        binding.tvPageIndicator.text = buildString {
+            repeat(viewModel.totalPages) { index ->
+                append(if (index == currentPageIndex) "●" else "○")
 
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+                if (index < viewModel.totalPages - 1) {
+                    append(" ")
+                }
+            }
+        }
     }
 }
+

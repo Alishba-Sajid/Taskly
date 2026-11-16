@@ -1,7 +1,9 @@
 package com.example.taskly.presentation.onboarding
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.taskly.R
 import com.example.taskly.data.repository.OnboardingPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -9,73 +11,80 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-data class OnboardingUiState(
-    val currentPage: Int = 0,
-    val title: String = "Welcome to Taskly",
-    val description: String = "A simple space to plan your day and stay on track.",
-    val buttonText: String = "Continue"
+data class OnboardingPage(
+    @param:StringRes val titleResId: Int,
+    @param:StringRes val descriptionResId: Int,
+    @param:StringRes val illustrationResId: Int
 )
-
-sealed class OnboardingEvent {
-    object ContinueClicked : OnboardingEvent()
-}
-
-sealed class OnboardingEffect {
-    object NavigateToHome : OnboardingEffect()
-}
-
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     private val onboardingPreferencesRepository: OnboardingPreferencesRepository
 ) : ViewModel() {
-
     private val pages = listOf(
-        OnboardingUiState(
-            currentPage = 0,
-            title = "Welcome to Taskly",
-            description = "A simple space to plan your day and stay on track.",
-            buttonText = "Continue"
+        OnboardingPage(
+            titleResId = R.string.onboarding_page_1_title,
+            descriptionResId = R.string.onboarding_page_1_description,
+            illustrationResId = R.string.onboarding_page_1_illustration
         ),
-        OnboardingUiState(
-            currentPage = 1,
-            title = "Everything in One Place",
-            description = "Add and edit tasks, assign dates, and track your progress easily.",
-            buttonText = "Continue"
+        OnboardingPage(
+            titleResId = R.string.onboarding_page_2_title,
+            descriptionResId = R.string.onboarding_page_2_description,
+            illustrationResId = R.string.onboarding_page_2_illustration
         ),
-        OnboardingUiState(
-            currentPage = 2,
-            title = "Make Every Day Count",
-            description = "Organize your tasks and stay focused on what matters.",
-            buttonText = "Get Started"
+        OnboardingPage(
+            titleResId = R.string.onboarding_page_3_title,
+            descriptionResId = R.string.onboarding_page_3_description,
+            illustrationResId = R.string.onboarding_page_3_illustration
         )
     )
+    private val _currentPageIndex = MutableStateFlow(0)
+    val currentPageIndex: StateFlow<Int> = _currentPageIndex.asStateFlow()
+    private val _titleResId = MutableStateFlow(pages.first().titleResId)
+    val titleResId: StateFlow<Int> = _titleResId.asStateFlow()
+    private val _descriptionResId =
+        MutableStateFlow(pages.first().descriptionResId)
+    val descriptionResId: StateFlow<Int> = _descriptionResId.asStateFlow()
+    private val _illustrationResId =
+        MutableStateFlow(pages.first().illustrationResId)
+    val illustrationResId: StateFlow<Int> = _illustrationResId.asStateFlow()
+    private val _buttonTextResId =
+        MutableStateFlow(R.string.onboarding_button_continue)
+    val buttonTextResId: StateFlow<Int> = _buttonTextResId.asStateFlow()
 
-    private val _uiState = MutableStateFlow(pages[0])
-    val uiState: StateFlow<OnboardingUiState> = _uiState
+    val totalPages: Int = pages.size
+    private val _navigationEvents = MutableSharedFlow<Unit>()
+    val navigationEvents = _navigationEvents.asSharedFlow()
 
-    private val _effects = MutableSharedFlow<OnboardingEffect>()
-    val effects = _effects.asSharedFlow()
+    fun onContinueClicked() {
+        val nextPageIndex = _currentPageIndex.value + 1
 
-    fun onEvent(event: OnboardingEvent) {
-        when (event) {
-            OnboardingEvent.ContinueClicked -> {
-                val nextPage = _uiState.value.currentPage + 1
+        if (nextPageIndex < pages.size) {
+            updatePage(nextPageIndex)
+        } else {
+            completeOnboarding()
+        }
+    }
+    private fun updatePage(pageIndex: Int) {
+        val page = pages[pageIndex]
 
-                if (nextPage < pages.size) {
-                    _uiState.value = pages[nextPage]
-                } else {
-                    viewModelScope.launch {
-                        onboardingPreferencesRepository.setOnboardingCompleted()
+        _currentPageIndex.value = pageIndex
+        _titleResId.value = page.titleResId
+        _descriptionResId.value = page.descriptionResId
+        _illustrationResId.value = page.illustrationResId
 
-                        _effects.emit(
-                            OnboardingEffect.NavigateToHome
-                        )
-                    }
-                }
-            }
+        _buttonTextResId.value = if (pageIndex == pages.lastIndex) {
+            R.string.onboarding_button_get_started
+        } else {
+            R.string.onboarding_button_continue
+        }
+    }
+    private fun completeOnboarding() {
+        viewModelScope.launch {
+            onboardingPreferencesRepository.setOnboardingCompleted()
+            _navigationEvents.emit(Unit)
         }
     }
 }
-
