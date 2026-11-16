@@ -1,53 +1,51 @@
 package com.example.taskly.presentation.calendar
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskly.R
+import com.example.taskly.core.extentionfunc.collectLifecycleFlow
+import com.example.taskly.core.extentionfunc.hide
+import com.example.taskly.core.extentionfunc.show
 import com.example.taskly.databinding.FragmentCalendarBinding
 import com.example.taskly.domain.model.Task
+import com.example.taskly.presentation.base.BaseFragment
 import com.example.taskly.presentation.home.TaskAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
+
 @AndroidEntryPoint
-class CalendarFragment : Fragment() {
-    private var _binding: FragmentCalendarBinding? = null
-    private val binding get() = _binding!!
+class CalendarFragment : BaseFragment<FragmentCalendarBinding>(
+    FragmentCalendarBinding::inflate
+) {
     private val viewModel: CalendarViewModel by viewModels()
     private lateinit var taskAdapter: TaskAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCalendarBinding.inflate(
-            inflater,
-            container,
-            false
-        )
-        return binding.root
+    override fun setupViews() {
+        setupRecyclerView()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun setupListeners() {
         setupClickListeners()
-        setupRecyclerView()
         setupCalendar()
-        observeUiState()
+    }
+
+    override fun observeData() {
+
+        collectLifecycleFlow(viewModel.selectedDate) { selectedDate ->
+            binding.tvSelectedDate.text = getString(
+                R.string.tasks_for_date,
+                formatDisplayDate(selectedDate)
+            )
+        }
+
+        collectLifecycleFlow(viewModel.tasks) { tasks ->
+            taskAdapter.submitList(tasks)
+            renderTasks(tasks)
+        }
     }
     private fun setupClickListeners() {
         binding.btnBack.setOnClickListener {
@@ -84,9 +82,9 @@ class CalendarFragment : Fragment() {
             adapter = taskAdapter
         }
     }
-
     private fun setupCalendar() {
-        binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+        binding.calendarView.setOnDateChangeListener {
+                _, year, month, dayOfMonth ->
 
             val selectedDate = String.format(
                 Locale.US,
@@ -99,24 +97,16 @@ class CalendarFragment : Fragment() {
             viewModel.onDateSelected(selectedDate)
         }
     }
-    private fun observeUiState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-
-                    binding.tvSelectedDate.text = getString(
-                        R.string.tasks_for_date,
-                        formatDisplayDate(state.selectedDate)
-                    )
-
-                    taskAdapter.submitList(state.tasks)
-
-                    binding.tvEmptyTasks.isVisible = state.tasks.isEmpty()
-                    binding.rvCalendarTasks.isVisible = state.tasks.isNotEmpty()
-                }
-            }
+    private fun renderTasks(tasks: List<Task>) {
+        if (tasks.isEmpty()) {
+            binding.tvEmptyTasks.show()
+            binding.rvCalendarTasks.hide()
+        } else {
+            binding.tvEmptyTasks.hide()
+            binding.rvCalendarTasks.show()
         }
     }
+
     private fun formatDisplayDate(date: String): String {
         val parsedDate = SimpleDateFormat(
             "yyyy-MM-dd",
@@ -139,10 +129,5 @@ class CalendarFragment : Fragment() {
                 viewModel.deleteTask(task)
             }
             .show()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
