@@ -1,73 +1,33 @@
 package com.example.taskly.presentation.edittask
 
-import android.app.DatePickerDialog
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.taskly.R
+import com.example.taskly.core.extentionfunc.collectLifecycleFlow
+import com.example.taskly.core.extentionfunc.showDatePicker
 import com.example.taskly.databinding.EditTaskFragmentBinding
+import com.example.taskly.core.extentionfunc.enable
+import com.example.taskly.core.extentionfunc.disable
+import com.example.taskly.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 @AndroidEntryPoint
-class EditTaskFragment : Fragment() {
-    private var _binding: EditTaskFragmentBinding? = null
-    private val binding get() = _binding!!
+class EditTaskFragment : BaseFragment<EditTaskFragmentBinding>(
+    EditTaskFragmentBinding::inflate
+) {
     private val viewModel: EditTaskViewModel by viewModels()
     private var selectedDueDate: String? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = EditTaskFragmentBinding.inflate(
-            inflater,
-            container,
-            false
-        )
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setupClickListeners()
-        observeUiState()
-        observeEffects()
-
-        val taskId = arguments?.getInt("taskId", -1) ?: -1
-
-        if (taskId > 0) {
-            viewModel.loadTask(taskId)
-        } else {
-            Toast.makeText(
-                requireContext(),
-                R.string.task_not_found,
-                Toast.LENGTH_SHORT
-            ).show()
-
-            findNavController().navigateUp()
-        }
-    }
-    private fun setupClickListeners() {
-
+    override fun setupListeners() {
         binding.btnBack.setOnClickListener {
             findNavController().navigateUp()
         }
 
         binding.etTaskDueDate.setOnClickListener {
-            showDatePicker()
+            openDatePicker()
         }
 
         binding.btnSaveChanges.setOnClickListener {
@@ -88,117 +48,103 @@ class EditTaskFragment : Fragment() {
         }
     }
 
-    private fun showDatePicker() {
-        val calendar = Calendar.getInstance()
+    override fun observeData() {
 
-        selectedDueDate?.let { date ->
-            val parts = date.split("-")
-
-            if (parts.size == 3) {
-                calendar.set(
-                    parts[0].toInt(),
-                    parts[1].toInt() - 1,
-                    parts[2].toInt()
-                )
+        collectLifecycleFlow(viewModel.isLoading) { isLoading ->
+            if (isLoading) {
+                binding.btnSaveChanges.disable()
+            } else {
+                binding.btnSaveChanges.enable()
             }
         }
 
-        DatePickerDialog(
-            requireContext(),
-            { _, year, month, dayOfMonth ->
+        collectLifecycleFlow(viewModel.task) { task ->
 
-                selectedDueDate = String.format(
-                    Locale.US,
-                    "%04d-%02d-%02d",
-                    year,
-                    month + 1,
-                    dayOfMonth
-                )
+            task?.let {
+                binding.etTaskTitle.setText(it.title)
+                binding.etTaskDescription.setText(it.description)
 
-                val displayDate = SimpleDateFormat(
-                    "dd MMM yyyy",
-                    Locale.getDefault()
-                ).format(
-                    Calendar.getInstance().apply {
-                        set(year, month, dayOfMonth)
-                    }.time
-                )
+                selectedDueDate = it.dueDate
+
+                val parsedDate = SimpleDateFormat(
+                    "yyyy-MM-dd",
+                    Locale.US
+                ).parse(it.dueDate)
+
+                val displayDate = parsedDate?.let { date ->
+                    SimpleDateFormat(
+                        "dd MMM yyyy",
+                        Locale.getDefault()
+                    ).format(date)
+                } ?: it.dueDate
 
                 binding.etTaskDueDate.setText(displayDate)
-                binding.tilTaskDueDate.error = null
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        ).show()
-    }
+            }
+        }
 
-    private fun observeUiState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
+        collectLifecycleFlow(viewModel.effects) { effect ->
 
-                    state.task?.let { task ->
-                        binding.etTaskTitle.setText(task.title)
-                        binding.etTaskDescription.setText(task.description)
+            when (effect) {
 
-                        selectedDueDate = task.dueDate
+                EditTaskEffect.NavigateBack -> {
+                    findNavController().navigateUp()
+                }
 
-                        val parsedDate = SimpleDateFormat(
-                            "yyyy-MM-dd",
-                            Locale.US
-                        ).parse(task.dueDate)
+                EditTaskEffect.ShowTitleError -> {
+                    binding.tilTaskTitle.error =
+                        getString(R.string.task_title_required)
+                }
 
-                        val displayDate = parsedDate?.let {
-                            SimpleDateFormat(
-                                "dd MMM yyyy",
-                                Locale.getDefault()
-                            ).format(it)
-                        } ?: task.dueDate
+                EditTaskEffect.ShowDueDateError -> {
+                    binding.tilTaskDueDate.error =
+                        getString(R.string.task_due_date_required)
+                }
 
-                        binding.etTaskDueDate.setText(displayDate)
-                    }
+                EditTaskEffect.TaskNotFound -> {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.task_not_found,
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    findNavController().navigateUp()
                 }
             }
         }
-    }
-    private fun observeEffects() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.effects.collect { effect ->
 
-                    when (effect) {
-                        EditTaskEffect.NavigateBack -> {
-                            findNavController().navigateUp()
-                        }
+        val taskId = arguments?.getInt("taskId", -1) ?: -1
 
-                        EditTaskEffect.ShowTitleError -> {
-                            binding.tilTaskTitle.error =
-                                getString(R.string.task_title_required)
-                        }
+        if (taskId > 0) {
+            viewModel.loadTask(taskId)
+        } else {
+            Toast.makeText(
+                requireContext(),
+                R.string.task_not_found,
+                Toast.LENGTH_SHORT
+            ).show()
 
-                        EditTaskEffect.ShowDueDateError -> {
-                            binding.tilTaskDueDate.error =
-                                getString(R.string.task_due_date_required)
-                        }
-
-                        EditTaskEffect.TaskNotFound -> {
-                            Toast.makeText(
-                                requireContext(),
-                                R.string.task_not_found,
-                                Toast.LENGTH_SHORT
-                            ).show()
-
-                            findNavController().navigateUp()
-                        }
-                    }
-                }
-            }
+            findNavController().navigateUp()
         }
     }
+    private fun openDatePicker() {
+        showDatePicker(initialDate = selectedDueDate) { year, month, dayOfMonth ->
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+            val selectedCalendar = Calendar.getInstance().apply {
+                set(year, month, dayOfMonth)
+            }
+
+            selectedDueDate = SimpleDateFormat(
+                "yyyy-MM-dd",
+                Locale.US
+            ).format(selectedCalendar.time)
+
+            val displayDate = SimpleDateFormat(
+                "dd MMM yyyy",
+                Locale.getDefault()
+            ).format(selectedCalendar.time)
+
+            binding.etTaskDueDate.setText(displayDate)
+            binding.tilTaskDueDate.error = null
+        }
     }
 }

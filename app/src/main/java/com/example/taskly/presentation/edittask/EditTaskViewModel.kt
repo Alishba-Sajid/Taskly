@@ -11,10 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-data class EditTaskUiState(
-    val task: Task? = null,
-    val isLoading: Boolean = true
-)sealed class EditTaskEffect {
+sealed class EditTaskEffect {
     object NavigateBack : EditTaskEffect()
     object ShowTitleError : EditTaskEffect()
     object ShowDueDateError : EditTaskEffect()
@@ -24,21 +21,20 @@ data class EditTaskUiState(
 class EditTaskViewModel @Inject constructor(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(EditTaskUiState())
-    val uiState = _uiState.asStateFlow()
+    private val _task = MutableStateFlow<Task?>(null)
+    val task = _task.asStateFlow()
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading = _isLoading.asStateFlow()
     private val _effects = MutableSharedFlow<EditTaskEffect>()
     val effects = _effects.asSharedFlow()
-
     fun loadTask(taskId: Int) {
         viewModelScope.launch {
-            val task = taskRepository.getTaskById(taskId)
+            val loadedTask = taskRepository.getTaskById(taskId)
 
-            _uiState.value = EditTaskUiState(
-                task = task,
-                isLoading = false
-            )
+            _task.value = loadedTask
+            _isLoading.value = false
 
-            if (task == null) {
+            if (loadedTask == null) {
                 _effects.emit(EditTaskEffect.TaskNotFound)
             }
         }
@@ -49,25 +45,21 @@ class EditTaskViewModel @Inject constructor(
         description: String,
         dueDate: String?
     ) {
-        val existingTask = _uiState.value.task ?: return
+        val existingTask = _task.value ?: return
 
         if (title.isBlank()) {
-            viewModelScope.launch {
-                _effects.emit(EditTaskEffect.ShowTitleError)
-            }
+            showEffect(EditTaskEffect.ShowTitleError)
             return
         }
 
         val validDueDate = dueDate?.trim()
 
         if (validDueDate.isNullOrBlank()) {
-            viewModelScope.launch {
-                _effects.emit(EditTaskEffect.ShowDueDateError)
-            }
+            showEffect(EditTaskEffect.ShowDueDateError)
             return
         }
 
-        viewModelScope.launch {
+        executeTaskAction {
             taskRepository.updateTask(
                 existingTask.copy(
                     title = title.trim(),
@@ -79,4 +71,15 @@ class EditTaskViewModel @Inject constructor(
             _effects.emit(EditTaskEffect.NavigateBack)
         }
     }
+    private fun showEffect(effect: EditTaskEffect) {
+        viewModelScope.launch {
+            _effects.emit(effect)
+        }
+    }
+    private fun executeTaskAction(action: suspend () -> Unit) {
+        viewModelScope.launch {
+            action()
+        }
+    }
+
 }
