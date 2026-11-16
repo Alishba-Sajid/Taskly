@@ -86,8 +86,7 @@ class CalendarFragment : Fragment() {
     }
 
     private fun setupCalendar() {
-        binding.calendarView.setOnDateChangeListener {
-                _, year, month, dayOfMonth ->
+        binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
 
             val selectedDate = String.format(
                 Locale.US,

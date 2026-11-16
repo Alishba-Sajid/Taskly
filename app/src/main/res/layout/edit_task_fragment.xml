@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_background"
+    android:background="#F7F7F2"
     android:padding="24dp">
 
     <!-- Header -->
@@ -16,7 +16,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/back"
         android:src="@drawable/ic_arrow_back"
-        app:tint="@color/app_tint"
+        app:tint="#245B45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:text="@string/edit_task_title"
-        android:textColor="@color/text_color"
+        android:textColor="#26352D"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/btnBack"
@@ -34,7 +34,7 @@
         app:layout_constraintStart_toEndOf="@id/btnBack"
         app:layout_constraintTop_toTopOf="@id/btnBack" />
 
-
+    <!-- Scrollable form -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollEditTask"
         android:layout_width="0dp"
@@ -44,6 +44,7 @@
         android:clipToPadding="false"
         android:fillViewport="false"
         android:overScrollMode="never"
+        app:layout_constraintWidth_max="488dp"
         app:layout_constraintTop_toBottomOf="@id/btnBack"
         app:layout_constraintBottom_toTopOf="@id/btnSaveChanges"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,10 +53,10 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="20dp"
             app:cardElevation="1dp"
-            app:strokeColor="@color/stroke"
+            app:strokeColor="#E5EAE3"
             app:strokeWidth="1dp">
 
             <LinearLayout
@@ -64,12 +65,13 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
+                <!-- Task title -->
                 <TextView
                     android:id="@+id/tvTaskTitleLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/task_title_label"
-                    android:textColor="@color/text_color"
+                    android:textColor="#26352D"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -78,13 +80,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="9dp"
-                    app:boxBackgroundColor="@color/box_bg"
+                    app:boxBackgroundColor="#FAFBF9"
                     app:boxBackgroundMode="outline"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusTopStart="12dp"
-                    app:boxStrokeColor="@color/app_tint">
+                    app:boxStrokeColor="#245B45">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etTaskTitle"
@@ -95,18 +97,19 @@
                         android:maxLines="1"
                         android:padding="16dp"
                         android:textColor="#26352D"
-                        android:textColorHint="@color/text_hint"
-                        tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+                        android:textColorHint="#858D85"
+                        tools:ignore="TextContrastCheck" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Description -->
                 <TextView
                     android:id="@+id/tvDescriptionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="@string/task_description_label"
-                    android:textColor="@color/text_color"
+                    android:textColor="#26352D"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -115,13 +118,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="9dp"
-                    app:boxBackgroundColor="@color/box_bg"
+                    app:boxBackgroundColor="#FAFBF9"
                     app:boxBackgroundMode="outline"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusTopStart="12dp"
-                    app:boxStrokeColor="@color/app_tint">
+                    app:boxStrokeColor="#245B45">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etTaskDescription"
@@ -131,19 +134,20 @@
                         android:hint="@string/task_description_hint"
                         android:inputType="textCapSentences|textMultiLine"
                         android:padding="16dp"
-                        android:textColor="@color/text_color"
-                        android:textColorHint="@color/text_hint"
-                        tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+                        android:textColor="#26352D"
+                        android:textColorHint="#858D85"
+                        tools:ignore="TextContrastCheck" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Due date -->
                 <TextView
                     android:id="@+id/tvDueDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="@string/task_due_date_label"
-                    android:textColor="@color/text_color"
+                    android:textColor="#26352D"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -152,13 +156,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="9dp"
-                    app:boxBackgroundColor="@color/box_bg"
+                    app:boxBackgroundColor="#FAFBF9"
                     app:boxBackgroundMode="outline"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusTopStart="12dp"
-                    app:boxStrokeColor="@color/app_tint">
+                    app:boxStrokeColor="#245B45">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etTaskDueDate"
@@ -169,9 +173,9 @@
                         android:hint="@string/task_due_date_hint"
                         android:inputType="none"
                         android:padding="16dp"
-                        android:textColor="@color/text_color"
-                        android:textColorHint="@color/text_hint"
-                        tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+                        android:textColor="#26352D"
+                        android:textColorHint="#858D85"
+                        tools:ignore="TextContrastCheck" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -181,22 +185,22 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <!-- Fixed save button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSaveChanges"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:text="@string/save_changes"
         android:textAllCaps="false"
-        android:textColor="@color/white"
+        android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:backgroundTint="@color/app_tint"
+        app:backgroundTint="#245B45"
         app:cornerRadius="16dp"
         app:elevation="2dp"
         app:layout_constraintWidth_max="488dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="VisualLintButtonSize" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
