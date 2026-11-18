@@ -10,7 +10,6 @@ import com.example.taskly.databinding.OnboardingFragmentBinding
 import com.example.taskly.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
 @AndroidEntryPoint
 class OnboardingFragment : BaseFragment<OnboardingFragmentBinding>(
     OnboardingFragmentBinding::inflate

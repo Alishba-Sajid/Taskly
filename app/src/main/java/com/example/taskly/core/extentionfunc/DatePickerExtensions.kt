@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-
 fun Fragment.showDatePicker(
     initialDate: String? = null,
     onDateSelected: (year: Int, month: Int, dayOfMonth: Int) -> Unit

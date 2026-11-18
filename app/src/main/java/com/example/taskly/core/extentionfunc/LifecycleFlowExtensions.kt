@@ -6,7 +6,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-
 fun <T> Fragment.collectLifecycleFlow(
     flow: Flow<T>,
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,

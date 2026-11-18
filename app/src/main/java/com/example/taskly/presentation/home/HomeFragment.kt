@@ -16,7 +16,6 @@ import com.example.taskly.databinding.HomeFragmentBinding
 import com.example.taskly.domain.model.Task
 import com.example.taskly.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<HomeFragmentBinding>(
     HomeFragmentBinding::inflate

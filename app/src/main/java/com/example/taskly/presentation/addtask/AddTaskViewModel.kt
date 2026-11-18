@@ -35,28 +35,23 @@ class AddTaskViewModel @Inject constructor(
         extraBufferCapacity = 1
     )
     val events = _events.asSharedFlow()
-
     fun onTitleChanged(title: String) {
         _title.value = title
         _titleError.value = null
     }
-
     fun onDescriptionChanged(description: String) {
         _description.value = description
     }
-
     fun onDueDateClicked() {
         if (_isSaving.value) return
 
         _events.tryEmit(AddTaskEvent.ShowDatePicker)
     }
-
     fun onDueDateSelected(dueDate: String, displayDate: String) {
         _selectedDueDate.value = dueDate
         _dueDateText.value = displayDate
         _dueDateError.value = null
     }
-
     fun onSaveClicked() {
         if (_isSaving.value) return
 

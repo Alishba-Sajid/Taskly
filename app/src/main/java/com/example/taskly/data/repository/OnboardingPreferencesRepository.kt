@@ -10,12 +10,10 @@ import kotlinx.coroutines.flow.map
 class OnboardingPreferencesRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
-
     val isOnboardingCompleted: Flow<Boolean> =
-        dataStore.data.map { preferences ->
+    dataStore.data.map { preferences ->
             preferences[ONBOARDING_COMPLETED] ?: false
         }
-
     suspend fun setOnboardingCompleted() {
         dataStore.edit { preferences ->
             preferences[ONBOARDING_COMPLETED] = true

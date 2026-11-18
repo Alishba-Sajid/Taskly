@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-
 abstract class BaseFragment<VB : ViewBinding>(
     private val inflateBinding: (
         inflater: LayoutInflater,
@@ -16,7 +15,7 @@ abstract class BaseFragment<VB : ViewBinding>(
 ) : Fragment() {
     private var _binding: VB? = null
     protected val binding: VB
-        get() = requireNotNull(_binding) {
+        get() = checkNotNull(_binding) {
             "Binding is only valid between onCreateView and onDestroyView."
         }
 
@@ -41,10 +40,9 @@ abstract class BaseFragment<VB : ViewBinding>(
     }
     protected open fun setupViews() = Unit
     protected open fun setupListeners() = Unit
-
     protected open fun observeData() = Unit
 
-    override fun onDestroyView() {
+    final override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }

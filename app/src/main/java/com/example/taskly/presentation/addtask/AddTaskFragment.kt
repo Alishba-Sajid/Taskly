@@ -13,7 +13,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-
 @AndroidEntryPoint
 class AddTaskFragment : BaseFragment<AddTaskFragmentBinding>(
     AddTaskFragmentBinding::inflate
@@ -80,7 +79,8 @@ class AddTaskFragment : BaseFragment<AddTaskFragmentBinding>(
                 binding.btnSaveTask.enable()
             }
         }
-    }private fun openDatePicker() {
+    }
+    private fun openDatePicker() {
         showDatePicker { year, month, dayOfMonth ->
 
             val selectedCalendar = Calendar.getInstance().apply {
