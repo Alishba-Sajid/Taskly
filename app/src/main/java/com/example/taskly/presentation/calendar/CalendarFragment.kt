@@ -6,9 +6,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskly.R
-import com.example.taskly.core.extentionfunc.collectLifecycleFlow
-import com.example.taskly.core.extentionfunc.hide
-import com.example.taskly.core.extentionfunc.show
+import com.example.taskly.core.extention.collectLifecycleFlow
+import com.example.taskly.core.extention.hide
+import com.example.taskly.core.extention.show
 import com.example.taskly.databinding.FragmentCalendarBinding
 import com.example.taskly.domain.model.Task
 import com.example.taskly.presentation.base.BaseFragment
@@ -22,6 +22,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(
     FragmentCalendarBinding::inflate
 ) {
     private val viewModel: CalendarViewModel by viewModels()
+
     private lateinit var taskAdapter: TaskAdapter
 
     override fun setupViews() {
@@ -47,11 +48,13 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(
             renderTasks(tasks)
         }
     }
+
     private fun setupClickListeners() {
         binding.btnBack.setOnClickListener {
             findNavController().navigateUp()
         }
     }
+
     private fun setupRecyclerView() {
         taskAdapter = TaskAdapter(
             onEditClick = { task ->
@@ -82,9 +85,9 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(
             adapter = taskAdapter
         }
     }
+
     private fun setupCalendar() {
-        binding.calendarView.setOnDateChangeListener {
-                _, year, month, dayOfMonth ->
+        binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
 
             val selectedDate = String.format(
                 Locale.US,
@@ -97,13 +100,16 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(
             viewModel.onDateSelected(selectedDate)
         }
     }
+
     private fun renderTasks(tasks: List<Task>) {
-        if (tasks.isEmpty()) {
-            binding.tvEmptyTasks.show()
-            binding.rvCalendarTasks.hide()
-        } else {
-            binding.tvEmptyTasks.hide()
-            binding.rvCalendarTasks.show()
+        binding.apply {
+            if (tasks.isEmpty()) {
+                tvEmptyTasks.show()
+                rvCalendarTasks.hide()
+            } else {
+                tvEmptyTasks.hide()
+                rvCalendarTasks.show()
+            }
         }
     }
 
@@ -120,6 +126,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(
             ).format(it)
         } ?: date
     }
+
     private fun showDeleteConfirmation(task: Task) {
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.delete_task_title))

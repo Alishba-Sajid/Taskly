@@ -11,22 +11,32 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
 sealed class EditTaskEffect {
     object NavigateBack : EditTaskEffect()
+
     object ShowTitleError : EditTaskEffect()
+
     object ShowDueDateError : EditTaskEffect()
+
     object TaskNotFound : EditTaskEffect()
 }
+
+
 @HiltViewModel
 class EditTaskViewModel @Inject constructor(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
+
     private val _task = MutableStateFlow<Task?>(null)
     val task = _task.asStateFlow()
+
     private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
+
     private val _effects = MutableSharedFlow<EditTaskEffect>()
     val effects = _effects.asSharedFlow()
+
     fun loadTask(taskId: Int) {
         viewModelScope.launch {
             val loadedTask = taskRepository.getTaskById(taskId)
@@ -71,11 +81,13 @@ class EditTaskViewModel @Inject constructor(
             _effects.emit(EditTaskEffect.NavigateBack)
         }
     }
+
     private fun showEffect(effect: EditTaskEffect) {
         viewModelScope.launch {
             _effects.emit(effect)
         }
     }
+
     private fun executeTaskAction(action: suspend () -> Unit) {
         viewModelScope.launch {
             action()

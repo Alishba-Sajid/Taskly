@@ -28,18 +28,21 @@ enum class TaskFilter {
 class HomeViewModel @Inject constructor(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
+
     private val _allTasks = MutableStateFlow<List<Task>>(emptyList())
+
     private val _searchQuery = MutableStateFlow("")
 
     val searchQuery: StateFlow<String> =
         _searchQuery.asStateFlow()
+
     private val _selectedFilter =
         MutableStateFlow(TaskFilter.ALL)
 
     val selectedFilter: StateFlow<TaskFilter> =
         _selectedFilter.asStateFlow()
-    private val _isLoading = MutableStateFlow(true)
 
+    private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> =
         _isLoading.asStateFlow()
 
@@ -94,6 +97,7 @@ class HomeViewModel @Inject constructor(
             )
         }
     }
+
     private fun observeTasks() {
         viewModelScope.launch {
             taskRepository.getAllTasks().collect { tasks ->
@@ -102,6 +106,7 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
     private fun List<Task>.applyFilters(
         searchQuery: String,
         selectedFilter: TaskFilter
@@ -146,6 +151,7 @@ class HomeViewModel @Inject constructor(
             matchesSearch && matchesFilter
         }
     }
+    
     private fun executeTaskAction(
         action: suspend () -> Unit
     ) {

@@ -3,16 +3,17 @@ package com.example.taskly.presentation.addtask
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.taskly.core.extentionfunc.collectLifecycleFlow
-import com.example.taskly.core.extentionfunc.disable
-import com.example.taskly.core.extentionfunc.enable
-import com.example.taskly.core.extentionfunc.showDatePicker
+import com.example.taskly.core.extention.collectLifecycleFlow
+import com.example.taskly.core.extention.disable
+import com.example.taskly.core.extention.enable
+import com.example.taskly.core.extention.showDatePicker
 import com.example.taskly.databinding.AddTaskFragmentBinding
 import com.example.taskly.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+
 @AndroidEntryPoint
 class AddTaskFragment : BaseFragment<AddTaskFragmentBinding>(
     AddTaskFragmentBinding::inflate
@@ -80,6 +81,7 @@ class AddTaskFragment : BaseFragment<AddTaskFragmentBinding>(
             }
         }
     }
+
     private fun openDatePicker() {
         showDatePicker { year, month, dayOfMonth ->
 

@@ -9,18 +9,20 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskly.R
-import com.example.taskly.core.extentionfunc.collectLifecycleFlow
-import com.example.taskly.core.extentionfunc.hide
-import com.example.taskly.core.extentionfunc.show
+import com.example.taskly.core.extention.collectLifecycleFlow
+import com.example.taskly.core.extention.hide
+import com.example.taskly.core.extention.show
 import com.example.taskly.databinding.HomeFragmentBinding
 import com.example.taskly.domain.model.Task
 import com.example.taskly.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<HomeFragmentBinding>(
     HomeFragmentBinding::inflate
 ) {
     private val viewModel: HomeViewModel by viewModels()
+
     private lateinit var taskAdapter: TaskAdapter
 
     override fun setupViews() {
@@ -28,20 +30,22 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(
     }
 
     override fun setupListeners() {
+        binding.apply {
+            btnAddTask.setOnClickListener {
+                findNavController().navigate(
+                    R.id.action_homeFragment_to_addTaskFragment
+                )
+            }
+
+            btnCalendar.setOnClickListener {
+                findNavController().navigate(
+                    R.id.action_homeFragment_to_calendarFragment
+                )
+            }
+        }
+
         setupSearch()
         setupFilters()
-
-        binding.btnAddTask.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_homeFragment_to_addTaskFragment
-            )
-        }
-
-        binding.btnCalendar.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_homeFragment_to_calendarFragment
-            )
-        }
     }
 
     override fun observeData() {
@@ -78,7 +82,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(
                 val bundle = Bundle().apply {
                     putInt("taskId", task.id)
                 }
-
                 findNavController().navigate(
                     R.id.action_homeFragment_to_editTaskFragment,
                     bundle
@@ -114,47 +117,54 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(
     }
 
     private fun setupFilters() {
-        binding.btnFilterAll.setOnClickListener {
-            selectFilter(TaskFilter.ALL)
-        }
+        binding.apply {
+            btnFilterAll.setOnClickListener {
+                selectFilter(TaskFilter.ALL)
+            }
 
-        binding.btnFilterInProgress.setOnClickListener {
-            selectFilter(TaskFilter.IN_PROGRESS)
-        }
+            btnFilterInProgress.setOnClickListener {
+                selectFilter(TaskFilter.IN_PROGRESS)
+            }
 
-        binding.btnFilterCompleted.setOnClickListener {
-            selectFilter(TaskFilter.COMPLETED)
-        }
+            btnFilterCompleted.setOnClickListener {
+                selectFilter(TaskFilter.COMPLETED)
+            }
 
-        binding.btnFilterOverdue.setOnClickListener {
-            selectFilter(TaskFilter.OVERDUE)
+            btnFilterOverdue.setOnClickListener {
+                selectFilter(TaskFilter.OVERDUE)
+            }
         }
     }
+
     private fun selectFilter(filter: TaskFilter) {
         viewModel.onFilterSelected(filter)
     }
+
     private fun renderTasks(
         tasks: List<Task>,
         isLoading: Boolean
     ) {
-        if (isLoading) {
-            binding.progressHomeLoading.show()
-        } else {
-            binding.progressHomeLoading.hide()
-        }
+        binding.apply {
+            if (isLoading) {
+                progressHomeLoading.show()
+            } else {
+                progressHomeLoading.hide()
+            }
 
-        if (!isLoading && tasks.isEmpty()) {
-            binding.layoutEmptyState.show()
-        } else {
-            binding.layoutEmptyState.hide()
-        }
+            if (!isLoading && tasks.isEmpty()) {
+                layoutEmptyState.show()
+            } else {
+                layoutEmptyState.hide()
+            }
 
-        if (!isLoading && tasks.isNotEmpty()) {
-            binding.rvTasks.show()
-        } else {
-            binding.rvTasks.hide()
+            if (!isLoading && tasks.isNotEmpty()) {
+                rvTasks.show()
+            } else {
+                rvTasks.hide()
+            }
         }
     }
+
     private fun updateFilterButtons(selectedFilter: TaskFilter) {
         val buttons = mapOf(
             TaskFilter.ALL to binding.btnFilterAll,

@@ -32,6 +32,7 @@ class CalendarViewModel @Inject constructor(
     private val _selectedDate = MutableStateFlow(
         dateFormat.format(Date())
     )
+
     val selectedDate = _selectedDate.asStateFlow()
 
     val tasks = selectedDate
@@ -53,6 +54,7 @@ class CalendarViewModel @Inject constructor(
             taskRepository.deleteTask(task)
         }
     }
+
     fun updateTaskStatus(task: Task, isCompleted: Boolean) {
         executeTaskAction {
             val updatedStatus = if (isCompleted) {
@@ -66,6 +68,7 @@ class CalendarViewModel @Inject constructor(
             )
         }
     }
+    
     private fun executeTaskAction(action: suspend () -> Unit) {
         viewModelScope.launch {
             action()

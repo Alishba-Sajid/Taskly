@@ -8,7 +8,7 @@
     android:background="#F7F7F2"
     android:padding="24dp">
 
-    <!-- Header -->
+
     <ImageButton
         android:id="@+id/btnBack"
         android:layout_width="48dp"
@@ -35,7 +35,7 @@
         app:layout_constraintStart_toEndOf="@id/btnBack"
         app:layout_constraintTop_toTopOf="@id/btnBack" />
 
-    <!-- Intro section -->
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardCreateIntro"
         android:layout_width="0dp"
@@ -99,7 +99,7 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Scrollable form -->
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollAddTask"
         android:layout_width="0dp"
@@ -130,7 +130,7 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <!-- Task title -->
+
                 <TextView
                     android:id="@+id/tvTaskTitleLabel"
                     android:layout_width="wrap_content"
@@ -167,7 +167,7 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Description -->
+
                 <TextView
                     android:id="@+id/tvDescriptionLabel"
                     android:layout_width="wrap_content"
@@ -205,7 +205,7 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Due date -->
+
                 <TextView
                     android:id="@+id/tvDueDateLabel"
                     android:layout_width="wrap_content"
@@ -250,7 +250,7 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Create button -->
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSaveTask"
         android:layout_width="0dp"

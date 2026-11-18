@@ -4,46 +4,50 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.taskly.R
-import com.example.taskly.core.extentionfunc.collectLifecycleFlow
-import com.example.taskly.core.extentionfunc.showDatePicker
+import com.example.taskly.core.extention.collectLifecycleFlow
+import com.example.taskly.core.extention.showDatePicker
 import com.example.taskly.databinding.EditTaskFragmentBinding
-import com.example.taskly.core.extentionfunc.enable
-import com.example.taskly.core.extentionfunc.disable
+import com.example.taskly.core.extention.enable
+import com.example.taskly.core.extention.disable
 import com.example.taskly.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+
 @AndroidEntryPoint
 class EditTaskFragment : BaseFragment<EditTaskFragmentBinding>(
     EditTaskFragmentBinding::inflate
 ) {
     private val viewModel: EditTaskViewModel by viewModels()
+
     private var selectedDueDate: String? = null
 
     override fun setupListeners() {
-        binding.btnBack.setOnClickListener {
-            findNavController().navigateUp()
-        }
+        binding.apply {
+            btnBack.setOnClickListener {
+                findNavController().navigateUp()
+            }
 
-        binding.etTaskDueDate.setOnClickListener {
-            openDatePicker()
-        }
+            etTaskDueDate.setOnClickListener {
+                openDatePicker()
+            }
 
-        binding.btnSaveChanges.setOnClickListener {
-            val title = binding.etTaskTitle.text.toString()
-            val description = binding.etTaskDescription.text.toString()
+            btnSaveChanges.setOnClickListener {
+                val title = etTaskTitle.text.toString()
+                val description = etTaskDescription.text.toString()
 
-            viewModel.updateTask(
-                title = title,
-                description = description,
-                dueDate = selectedDueDate
-            )
-        }
+                viewModel.updateTask(
+                    title = title,
+                    description = description,
+                    dueDate = selectedDueDate
+                )
+            }
 
-        binding.etTaskTitle.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.tilTaskTitle.error = null
+            etTaskTitle.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    tilTaskTitle.error = null
+                }
             }
         }
     }
@@ -51,21 +55,17 @@ class EditTaskFragment : BaseFragment<EditTaskFragmentBinding>(
     override fun observeData() {
 
         collectLifecycleFlow(viewModel.isLoading) { isLoading ->
-            if (isLoading) {
-                binding.btnSaveChanges.disable()
-            } else {
-                binding.btnSaveChanges.enable()
+            binding.apply {
+                if (isLoading) {
+                    btnSaveChanges.disable()
+                } else {
+                    btnSaveChanges.enable()
+                }
             }
         }
 
         collectLifecycleFlow(viewModel.task) { task ->
-
             task?.let {
-                binding.etTaskTitle.setText(it.title)
-                binding.etTaskDescription.setText(it.description)
-
-                selectedDueDate = it.dueDate
-
                 val parsedDate = SimpleDateFormat(
                     "yyyy-MM-dd",
                     Locale.US
@@ -78,12 +78,17 @@ class EditTaskFragment : BaseFragment<EditTaskFragmentBinding>(
                     ).format(date)
                 } ?: it.dueDate
 
-                binding.etTaskDueDate.setText(displayDate)
+                selectedDueDate = it.dueDate
+
+                binding.apply {
+                    etTaskTitle.setText(it.title)
+                    etTaskDescription.setText(it.description)
+                    etTaskDueDate.setText(displayDate)
+                }
             }
         }
 
         collectLifecycleFlow(viewModel.effects) { effect ->
-
             when (effect) {
 
                 EditTaskEffect.NavigateBack -> {
@@ -126,9 +131,9 @@ class EditTaskFragment : BaseFragment<EditTaskFragmentBinding>(
             findNavController().navigateUp()
         }
     }
+
     private fun openDatePicker() {
         showDatePicker(initialDate = selectedDueDate) { year, month, dayOfMonth ->
-
             val selectedCalendar = Calendar.getInstance().apply {
                 set(year, month, dayOfMonth)
             }
@@ -143,8 +148,10 @@ class EditTaskFragment : BaseFragment<EditTaskFragmentBinding>(
                 Locale.getDefault()
             ).format(selectedCalendar.time)
 
-            binding.etTaskDueDate.setText(displayDate)
-            binding.tilTaskDueDate.error = null
+            binding.apply {
+                etTaskDueDate.setText(displayDate)
+                tilTaskDueDate.error = null
+            }
         }
     }
 }

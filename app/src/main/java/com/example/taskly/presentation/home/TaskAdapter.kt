@@ -3,17 +3,17 @@ package com.example.taskly.presentation.home
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskly.R
-import com.example.taskly.core.extentionfunc.isOverdue
-import com.example.taskly.core.extentionfunc.show
-import com.example.taskly.core.extentionfunc.toDueDateText
+import com.example.taskly.core.extention.isOverdue
+import com.example.taskly.core.extention.show
+import com.example.taskly.core.extention.toDueDateText
 import com.example.taskly.databinding.ItemTaskBinding
 import com.example.taskly.domain.model.Task
 import com.example.taskly.domain.model.TaskStatus
-import androidx.core.graphics.toColorInt
 
 class TaskAdapter(
     private val onEditClick: (Task) -> Unit,
@@ -40,14 +40,12 @@ class TaskAdapter(
     ) {
         holder.bind(getItem(position))
     }
+
     inner class TaskViewHolder(
         private val binding: ItemTaskBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(task: Task) {
-            binding.tvTaskTitle.text = task.title
-            binding.tvTaskDescription.text = task.description
-
             val context = binding.root.context
             val isOverdue = task.isOverdue()
 
@@ -81,38 +79,44 @@ class TaskAdapter(
                 }
             }
 
-            binding.tvTaskStatus.text = statusText
-            binding.tvTaskStatus.setTextColor(textColor)
-
             val cornerRadius = 8 * binding.root.resources
                 .displayMetrics.density
 
-            binding.tvTaskStatus.background = GradientDrawable().apply {
-                setColor(backgroundColor)
-                this.cornerRadius = cornerRadius
-            }
+            binding.apply {
+                tvTaskTitle.text = task.title
+                tvTaskDescription.text = task.description
 
-            binding.tvTaskDueDate.text = task.toDueDateText(context)
-            binding.tvTaskDueDate.show()
+                tvTaskStatus.text = statusText
+                tvTaskStatus.setTextColor(textColor)
 
-            binding.cbTaskCompleted.setOnCheckedChangeListener(null)
+                tvTaskStatus.background = GradientDrawable().apply {
+                    setColor(backgroundColor)
+                    this.cornerRadius = cornerRadius
+                }
 
-            binding.cbTaskCompleted.isChecked =
-                task.status == TaskStatus.COMPLETED
+                tvTaskDueDate.text = task.toDueDateText(context)
+                tvTaskDueDate.show()
 
-            binding.cbTaskCompleted.setOnCheckedChangeListener { _, isChecked ->
-                onStatusChangeClick(task, isChecked)
-            }
+                cbTaskCompleted.setOnCheckedChangeListener(null)
 
-            binding.btnEditTask.setOnClickListener {
-                onEditClick(task)
-            }
+                cbTaskCompleted.isChecked =
+                    task.status == TaskStatus.COMPLETED
 
-            binding.btnDeleteTask.setOnClickListener {
-                onDeleteClick(task)
+                cbTaskCompleted.setOnCheckedChangeListener { _, isChecked ->
+                    onStatusChangeClick(task, isChecked)
+                }
+
+                btnEditTask.setOnClickListener {
+                    onEditClick(task)
+                }
+
+                btnDeleteTask.setOnClickListener {
+                    onDeleteClick(task)
+                }
             }
         }
     }
+
     class TaskDiffCallback : DiffUtil.ItemCallback<Task>() {
 
         override fun areItemsTheSame(

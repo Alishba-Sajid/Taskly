@@ -19,10 +19,12 @@ data class OnboardingPage(
     @param:StringRes val descriptionResId: Int,
     @param:StringRes val illustrationResId: Int
 )
+
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     private val onboardingPreferencesRepository: OnboardingPreferencesRepository
 ) : ViewModel() {
+
     private val pages = listOf(
         OnboardingPage(
             titleResId = R.string.onboarding_page_1_title,
@@ -40,20 +42,27 @@ class OnboardingViewModel @Inject constructor(
             illustrationResId = R.string.onboarding_page_3_illustration
         )
     )
+
     private val _currentPageIndex = MutableStateFlow(0)
     val currentPageIndex: StateFlow<Int> = _currentPageIndex.asStateFlow()
+
     private val _titleResId = MutableStateFlow(pages.first().titleResId)
     val titleResId: StateFlow<Int> = _titleResId.asStateFlow()
+
     private val _descriptionResId =
         MutableStateFlow(pages.first().descriptionResId)
     val descriptionResId: StateFlow<Int> = _descriptionResId.asStateFlow()
+
     private val _illustrationResId =
         MutableStateFlow(pages.first().illustrationResId)
     val illustrationResId: StateFlow<Int> = _illustrationResId.asStateFlow()
+
     private val _buttonTextResId =
         MutableStateFlow(R.string.onboarding_button_continue)
     val buttonTextResId: StateFlow<Int> = _buttonTextResId.asStateFlow()
+
     val totalPages: Int = pages.size
+
     private val _navigationEvents = MutableSharedFlow<Unit>()
     val navigationEvents = _navigationEvents.asSharedFlow()
 
@@ -66,6 +75,7 @@ class OnboardingViewModel @Inject constructor(
             completeOnboarding()
         }
     }
+
     private fun updatePage(pageIndex: Int) {
         val page = pages[pageIndex]
 
@@ -80,6 +90,7 @@ class OnboardingViewModel @Inject constructor(
             R.string.onboarding_button_continue
         }
     }
+    
     private fun completeOnboarding() {
         viewModelScope.launch {
             onboardingPreferencesRepository.setOnboardingCompleted()

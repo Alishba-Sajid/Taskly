@@ -3,10 +3,11 @@ package com.example.taskly.presentation.splash
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.taskly.R
-import com.example.taskly.core.extentionfunc.collectLifecycleFlow
+import com.example.taskly.core.extention.collectLifecycleFlow
 import com.example.taskly.databinding.SplashFragmentBinding
 import com.example.taskly.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+
 @AndroidEntryPoint
 class SplashFragment : BaseFragment<SplashFragmentBinding>(
     SplashFragmentBinding::inflate

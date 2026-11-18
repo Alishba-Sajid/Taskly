@@ -17,9 +17,12 @@ import kotlin.time.Duration.Companion.milliseconds
 class SplashViewModel @Inject constructor(
     private val onboardingPreferencesRepository: OnboardingPreferencesRepository
 ) : ViewModel() {
+
     private val _navigationEvents = MutableSharedFlow<Boolean>()
     val navigationEvents = _navigationEvents.asSharedFlow()
+
     private var splashJob: Job? = null
+    
     fun startSplash() {
 
         if (splashJob?.isActive == true) return
